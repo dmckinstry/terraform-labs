@@ -13,15 +13,13 @@ terraform {
 
 provider "azurerm" {
   version = "~>1.30.1"
-   subscription_id = "${var.kubernetes_subscription_id}"
-   client_id       = "${var.kubernetes_client_id}"
-   client_secret   = "${var.kubernetes_client_secret}"
-   tenant_id       = "${var.kubernetes_tenant_id}"
+  # Use environment variables for secrets and GUIDs
+
 }
 
 resource "azurerm_resource_group" "test" {
-  name     = "${var.prefix}-aks-rg"
-  location = "${var.location}"
+  name     = "${var.PREFIX}-aks-rg"
+  location = "${var.LOCATION}"
 }
 
 resource "azurerm_policy_assignment" "test" {
@@ -35,7 +33,7 @@ resource "azurerm_policy_assignment" "test" {
   parameters = <<PARAMETERS
   {
     "allowedLocations": {
-      "value": [ "${var.location}" ]
+      "value": [ "${var.LOCATION}" ]
     }
   }
 PARAMETERS
@@ -43,7 +41,7 @@ PARAMETERS
 
 #Uncomment below if you need a Route Table (UDR) to route to an Netwokr Virtual Appliamce (Palo Alto, F5, Barricuda, Cisco ASR, etc) in a peered VNET
 # resource "azurerm_route_table" "test" {
-#   name                = "${var.prefix}-routetable"
+#   name                = "${var.PREFIX}-routetable"
 #   location            = "${azurerm_resource_group.test.location}"
 #   resource_group_name = "${azurerm_resource_group.test.name}"
 
@@ -56,7 +54,7 @@ PARAMETERS
 # }
 
 # resource "azurerm_log_analytics_workspace" "test" {
-#   name                = "${var.prefix}-law"
+#   name                = "${var.PREFIX}-law"
 #   location            = "${azurerm_resource_group.test.location}"
 #   resource_group_name = "${azurerm_resource_group.test.name}"
 #   sku                 = "Free"
@@ -76,7 +74,7 @@ PARAMETERS
 # }
 
 resource "azurerm_virtual_network" "test" {
-  name                = "${var.prefix}-network"
+  name                = "${var.PREFIX}-network"
   location            = "${azurerm_resource_group.test.location}"
   resource_group_name = "${azurerm_resource_group.test.name}"
   address_space       = ["${var.vnetIPCIDR}"]
@@ -99,9 +97,9 @@ resource "azurerm_subnet" "test" {
 # }
 
 resource "azurerm_kubernetes_cluster" "test" {
-  name                = "${var.prefix}-aks"
+  name                = "${var.PREFIX}-aks"
   location            = "${azurerm_resource_group.test.location}"
-  dns_prefix          = "${var.prefix}-aks"
+  dns_prefix          = "${var.PREFIX}-aks"
   resource_group_name = "${azurerm_resource_group.test.name}"
   kubernetes_version = "${var.k8sVer}"
 
@@ -125,8 +123,8 @@ resource "azurerm_kubernetes_cluster" "test" {
   }
 
   service_principal {
-    client_id     = "${var.kubernetes_client_id}"
-    client_secret = "${var.kubernetes_client_secret}"
+    client_id     = "${var.ARM_CLIENT_ID}"
+    client_secret = "${var.ARM_CLIENT_SECRET}"
   }
 
   role_based_access_control {
