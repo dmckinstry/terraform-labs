@@ -17,17 +17,7 @@ azure account set -s MySubscriptionId
 az ad sp create-for-rbac
 ```
 
-The output is similar to the following example. Make a note of your own `appId`, `password` and `tenant`. These values are used for the environment variables.
-
-```json
-{
-  "appId": "XXXXXXXX-0c19-4c1a-87cd-851a26afd5fc",
-  "displayName": "azure-cli-2018-09-25-21-10-19",
-  "name": "http://azure-cli-2018-09-25-21-10-19",
-  "password": "XXXXXXXX-5eee-40e8-a466-dc88d980f415",
-  "tenant": "XXXXXXXX-86f1-41af-91ab-2d7cd011db48"
-}
-```
+Make a note of your own `appId`, `password` and `tenant`. These values are used for the environment variables.
 
 ### Create the Storage Account for Terraform state
 
@@ -44,6 +34,7 @@ az storage account keys list -n MyStorageAccount
 After the account has been created, update the storage_account_name attribute in backend "azurerm" block in [main.tf](/aks_advnet_rbac/main.tf) to the new storage account name. Update the ARM_ACCESS_KEY environment variable to the new account access key. 
 
 ## Environment variables 
+*NOTE: For the Airlift Challenge, please ensure all secrets are **secure**.*
 Expected in the [variables.tf](/aks_advnet_rbac/variables.tf) file:
 
 ### Reserved Terraform environment variable names:
@@ -72,7 +63,6 @@ TFSTATE_STORAGE - The name of the storage account where the Terraform state is k
 
 
 ## Running Terraform
-
 To run the Terraform file on a local machine or in Azure Pipelines:
 
 ```      
