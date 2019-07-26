@@ -18,7 +18,7 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Ping")
 }
 
-func insecureConnect()  {
+func insecureHandler(w http.ResponseWriter, r *http.Request)  {
   user := "root"
   myPassword := "supersecret"
   url := "login=" + user + "&passwd=" + myPassword
@@ -29,7 +29,6 @@ func insecureConnect()  {
   )
 
   fmt.Fprintf(w, "using %q - %q - %q", url, ip, port)
-  // SocketClient(ip, port)
 }
 
 func main() {
