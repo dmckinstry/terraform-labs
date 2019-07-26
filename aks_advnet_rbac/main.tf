@@ -4,8 +4,6 @@ terraform {
 
   backend "azurerm" {
 
-    # Unfortunately variables are not allowed for storage_account_name, change this to your unique storage account
-    storage_account_name = "tfstateazdo"
     container_name       = "tfstate"
     key                  = "prod.terraform.tfstate"
 
@@ -19,6 +17,8 @@ provider "azurerm" {
   # Use environment variables for secrets and GUIDs
 
 }
+
+data "azurerm_client_config" "current" {}
 
 resource "azurerm_resource_group" "test" {
   name     = "${var.PREFIX}-aks-rg"
@@ -126,10 +126,8 @@ resource "azurerm_kubernetes_cluster" "test" {
   }
 
   service_principal {
-    # The Service Principal is used by terraform to authenticate the script commands (terraforn init, plan, apply etc.)
-    # Unforunately the reserved names ARM_CLIENT_ID and ARM_CLIENT_SECRET are not allowed here
-    # Instead we are using TF_VAR_ARM_CLIENT_ID
-    client_id     = "${var.ARM_CLIENT_ID}"
+    # Used for the AKS cluster
+    client_id     = "${var.ARM_CLIENT_ID}"	    
     client_secret = "${var.ARM_CLIENT_SECRET}"
   }
 
