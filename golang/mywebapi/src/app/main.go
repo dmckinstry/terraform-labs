@@ -27,6 +27,8 @@ func insecureConnect()  {
     ip   = "127.0.0.1"
     port = 3333
   )
+
+  fmt.Fprintf(w, "using %q - %q - %q", url, ip, port)
   // SocketClient(ip, port)
 }
 
